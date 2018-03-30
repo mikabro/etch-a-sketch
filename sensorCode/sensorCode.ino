@@ -1,26 +1,57 @@
-#define SENSORPINA A0 // x axis
- //TODO: define other sensor inputs
+const int sensorPinX = A1; // x axis
+const int sensorPinY = A3; // y axis
+const int buttonPin1 = 2; //clear button
+const int buttonPin2 = 4; // color change button
 
-unsigned long targetTime=0;
-const unsigned long interval=2500; //TODO: How fast should we read
-void setup(){
-// TODO: begin the serial connection with a baudrate of 115200
+unsigned long targetTime = 0;
+const unsigned long interval = 100;
+
+int buttonState1 = 0;
+int buttonState2 = 0;
+
+int x = 0;
+int y = 0;
+
+void setup() {
+  // initialize inputs   
+  pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
+  
+  pinMode(sensorPinX, INPUT);
+  pinMode(sensorPinY, INPUT);
+  
+  Serial.begin(115200);
 }
 
+void loop() {
+  if (millis() >= targetTime) {
 
-void loop(){
-	if(millis()>=targetTime){
-		targetTime= millis()+interval;
-		Serial.println(analogRead(SENSORPINA));
+    int buttonState1 = digitalRead(buttonPin1);
+    int buttonState2 = digitalRead(buttonPin2);
 
-		 //TODO: Add other sensor read outs
-     //TODO: convert values into a string https://www.arduino.cc/en/Tutorial/StringConstructors
-		 //TODO: combine them into a string that can be understood by server.js
-		 //TODO: send the string over serial
+    if (buttonState2 == HIGH) {
+      Serial.println(String("changecolor"));
+    }
 
+    if (buttonState1 == HIGH) { //If button is pressed, reset
+      Serial.println(String("rst"));
+      x = 0;
+      y = 0;
+    } 
+    else {
+      int x_axis = analogRead(sensorPinX);
+      int y_axis = analogRead(sensorPinY);
+      
+      if (x_axis= x or y_axis != y) {
+        x = x_axis;
+        y = y_axis;
+        
+        String data = String(x_axis) + String(",") + String(y_axis);
+        Serial.println(data);
 
-	}
-	// TODO: Detect if you want to reset the screen(shake the etch-a-sketch)
-  // TODO: write the reset message(see server.js) to the serial port
+        targetTime = millis() + interval;
+      }
+    }
 
+  }
 }
