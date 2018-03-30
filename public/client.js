@@ -16,10 +16,21 @@ var firstMessage=true;    // What the first message, to start on the first value
       ctx.clear();
     });
 
+    socket.on('changecolor', function() { 
+      var r = Math.floor(Math.random() * 256); 
+      var g = Math.floor(Math.random() * 256); 
+      var b = Math.floor(Math.random() * 256); 
+      var rgb = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+
+      COLOUR = rgb; // generates random color when button is pressed https://stackoverflow.com/questions/23095637/how-do-you-do-a-random-rbg-in-javascript
+
     socket.on('new-pos', function(newPosition) { // handling new sensor values
 
       //TODO: Map the incoming 10-bit numbers to the height and width of the screen.
       // See https://github.com/soulwire/sketch.js/wiki/API for sketch references
+ 
+      newPosition[0] = map(newPosition[0], 0, 1023, 0, ctx.width*.7);
+      newPosition[1] = map(newPosition[1], 0, 1023, 0, ctx.height*.7);
 
       if(firstMessage){ // if its the first message store that value as previous
         firstMessage=false;
