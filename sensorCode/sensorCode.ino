@@ -30,7 +30,7 @@ void loop() {
     int buttonState2 = digitalRead(buttonPin2);
 
     if (buttonState2 == HIGH) {
-      Serial.println(String("changecolor"));
+      Serial.println(String("cch"));
     }
 
     if (buttonState1 == HIGH) { //If button is pressed, reset
